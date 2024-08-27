@@ -144,38 +144,38 @@ void getForces()
 	Force.y = 0.0;
 	Force.z = 0.0;
 
-	float k = 2000.0;
+	float stiffness = 2000.0;
 	float halfSide = BoxSideLength/2.0;
 	float SphereRadius = SphereDiameter/2.0;
 
 	if(Position.x > halfSide)
 	{
-		Force.x = Force.x -(Position.x - halfSide)*k;
+		Force.x = Force.x -(Position.x - halfSide)*stiffness;
 	} 
 
 	if(Position.x < -halfSide)
 	{
-		Force.x = Force.x +(halfSide - Position.x)*k;
+		Force.x = Force.x +(halfSide - Position.x)*stiffness;
 	}
 
 	if(Position.y > halfSide)
 	{
-		Force.y = Force.y -(Position.y - halfSide)*k;
+		Force.y = Force.y -(Position.y - halfSide)*stiffness;
 	}
 
 	if(Position.y < -halfSide)
 	{
-		Force.y = Force.y + (halfSide - Position.y)*k;
+		Force.y = Force.y + (halfSide - Position.y)*stiffness;
 	}
 
 	if(Position.z > halfSide)
 	{
-		Force.z = Force.z - (Position.z - halfSide)*k;
+		Force.z = Force.z - (Position.z - halfSide)*stiffness;
 	}
 
 	if(Position.z < -halfSide)
 	{
-		Force.z = Force.z + (halfSide - Position.z)*k;
+		Force.z = Force.z + (halfSide - Position.z)*stiffness;
 	}
 }
 
