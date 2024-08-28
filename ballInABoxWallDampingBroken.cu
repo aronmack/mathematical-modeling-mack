@@ -141,6 +141,7 @@ void getForces()
 	float halfSide = BoxSideLength/2.0;
 	float howMuch;
 	float ballRadius = SphereDiameter/2.0;
+	float energyretention = .8
 	
 	Force.x = 0.0;
 	Force.y = 0.0;
@@ -150,33 +151,69 @@ void getForces()
 	{
 		howMuch = -halfSide - (Position.x - ballRadius);
 		Force.x += wallStiffness*howMuch;
+		
+		KE = .5 * SphereMass * Velocity.x * Velocity.x	//calculate the initial kinetic energy
+		newKE = KE * energyretention		//reduce it
+		
+		Velocity.x = sqrt(2 * newKE / mass)	//calculate new velocity
+		Velocity.x = -Velocity.x		//reverse the direction of the ball after collision
 	}
 	else if(halfSide < (Position.x + ballRadius))
 	{
 		howMuch = (Position.x + ballRadius) - halfSide;
 		Force.x -= wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.x * Velocity.x
+		newKE = KE * energyretention
+		
+		Velocity.x = sqrt(2 * newKE / mass)
+		Velocity.x = -Velocity.x
 	}
 	
 	if((Position.y - ballRadius) < -halfSide)
 	{
 		howMuch = -halfSide - (Position.y - ballRadius);
 		Force.y += wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.y * Velocity.y
+		newKE = KE * energyretention
+		
+		Velocity.y = sqrt(2 * newKE / mass)
+		Velocity.y = -Velocity.y
 	}
 	else if(halfSide < (Position.y + ballRadius))
 	{
 		howMuch = (Position.y + ballRadius) - halfSide;
 		Force.y -= wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.y * Velocity.y
+		newKE = KE * energyretention
+		
+		Velocity.y = sqrt(2 * newKE / mass)
+		Velocity.y = -Velocity.y
 	}
 	
 	if((Position.z - ballRadius) < -halfSide)
 	{
 		howMuch = -halfSide - (Position.z - ballRadius);
 		Force.z += wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.z * Velocity.z
+		newKE = KE * energyretention
+		
+		Velocity.z = sqrt(2 * newKE / mass)
+		Velocity.z = -Velocity.z
 	}
 	else if(halfSide < (Position.z + ballRadius))
 	{
 		howMuch = (Position.z + ballRadius) - halfSide;
 		Force.z -= wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.z * Velocity.z
+		newKE = KE * energyretention
+		
+		Velocity.z = sqrt(2 * newKE / mass)
+		Velocity.z = -Velocity.z
 	}
 }
 
