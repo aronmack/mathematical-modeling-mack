@@ -71,8 +71,8 @@ void setInitailConditions()
 	Position.y = 0.0;
 	Position.z = 0.0;
 	
-	Velocity.x = 11.0;
-	Velocity.y = 10.0;
+	Velocity.x = 90.0;
+	Velocity.y = 25.0;
 	Velocity.z = 10.0;
 	
 	Force.x = 0.0;
@@ -91,7 +91,7 @@ void drawPicture()
 	
 	float halfSide = BoxSideLength/2.0;
 	
-	glColor3d(1.0, 1.0, 0.0);
+	glColor3d(0.69, 0.61, 0.85);
 	glPushMatrix();
 		glTranslatef(Position.x, Position.y, Position.z);
 		glutSolidSphere(SphereDiameter/2.0, 30, 30);
@@ -141,7 +141,7 @@ void getForces()
 	float halfSide = BoxSideLength/2.0;
 	float howMuch;
 	float ballRadius = SphereDiameter/2.0;
-	float energyretention = .8
+	float energyretention = .95;		//energy stored
 	
 	Force.x = 0.0;
 	Force.y = 0.0;
@@ -152,22 +152,14 @@ void getForces()
 		howMuch = -halfSide - (Position.x - ballRadius);
 		Force.x += wallStiffness*howMuch;
 		
-		KE = .5 * SphereMass * Velocity.x * Velocity.x	//calculate the initial kinetic energy
-		newKE = KE * energyretention		//reduce it
-		
-		Velocity.x = sqrt(2 * newKE / mass)	//calculate new velocity
-		Velocity.x = -Velocity.x		//reverse the direction of the ball after collision
+		Velocity.x *= energyretention;
 	}
 	else if(halfSide < (Position.x + ballRadius))
 	{
 		howMuch = (Position.x + ballRadius) - halfSide;
 		Force.x -= wallStiffness*howMuch;
 
-		KE = .5 * SphereMass * Velocity.x * Velocity.x
-		newKE = KE * energyretention
-		
-		Velocity.x = sqrt(2 * newKE / mass)
-		Velocity.x = -Velocity.x
+		Velocity.x *= energyretention;
 	}
 	
 	if((Position.y - ballRadius) < -halfSide)
@@ -175,22 +167,14 @@ void getForces()
 		howMuch = -halfSide - (Position.y - ballRadius);
 		Force.y += wallStiffness*howMuch;
 
-		KE = .5 * SphereMass * Velocity.y * Velocity.y
-		newKE = KE * energyretention
-		
-		Velocity.y = sqrt(2 * newKE / mass)
-		Velocity.y = -Velocity.y
+		Velocity.y *= energyretention;
 	}
 	else if(halfSide < (Position.y + ballRadius))
 	{
 		howMuch = (Position.y + ballRadius) - halfSide;
 		Force.y -= wallStiffness*howMuch;
 
-		KE = .5 * SphereMass * Velocity.y * Velocity.y
-		newKE = KE * energyretention
-		
-		Velocity.y = sqrt(2 * newKE / mass)
-		Velocity.y = -Velocity.y
+		Velocity.y *= energyretention;
 	}
 	
 	if((Position.z - ballRadius) < -halfSide)
@@ -198,24 +182,109 @@ void getForces()
 		howMuch = -halfSide - (Position.z - ballRadius);
 		Force.z += wallStiffness*howMuch;
 
-		KE = .5 * SphereMass * Velocity.z * Velocity.z
-		newKE = KE * energyretention
-		
-		Velocity.z = sqrt(2 * newKE / mass)
-		Velocity.z = -Velocity.z
+		Velocity.z *= energyretention;
 	}
 	else if(halfSide < (Position.z + ballRadius))
 	{
 		howMuch = (Position.z + ballRadius) - halfSide;
 		Force.z -= wallStiffness*howMuch;
 
-		KE = .5 * SphereMass * Velocity.z * Velocity.z
-		newKE = KE * energyretention
-		
-		Velocity.z = sqrt(2 * newKE / mass)
-		Velocity.z = -Velocity.z
+		Velocity.z *= energyretention;
 	}
 }
+
+//KINETIC ENERGY WAY//
+/*void getForces()
+{
+	float wallStiffness = 10000.0;
+	float halfSide = BoxSideLength/2.0;
+	float howMuch;
+	float ballRadius = SphereDiameter/2.0;
+	float energyretention = .5;		//energy stored
+	float KE;
+	float newKE;
+	
+	Force.x = 0.0;
+	Force.y = 0.0;
+	Force.z = 0.0;
+	
+	if((Position.x - ballRadius) < -halfSide)
+	{
+		howMuch = -halfSide - (Position.x - ballRadius);
+		Force.x += wallStiffness*howMuch;
+		
+		KE = .5 * SphereMass * Velocity.x * Velocity.x;	//calculate the initial kinetic energy
+		newKE = KE * energyretention;		//reduce it
+		
+		Velocity.x = sqrt(2 * newKE / SphereMass);	//calculate new velocity
+	
+		Velocity.x = -Velocity.x;		//reverse the collision
+	}
+	else if(halfSide < (Position.x + ballRadius))
+	{
+		howMuch = (Position.x + ballRadius) - halfSide;
+		Force.x -= wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.x * Velocity.x;
+		newKE = KE * energyretention;
+		
+		Velocity.x = sqrt(2 * newKE / SphereMass);
+
+		Velocity.x = -Velocity.x;
+	}
+	
+	if((Position.y - ballRadius) < -halfSide)
+	{
+		howMuch = -halfSide - (Position.y - ballRadius);
+		Force.y += wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.y * Velocity.y;
+		newKE = KE * energyretention;
+		
+		Velocity.y = sqrt(2 * newKE / SphereMass);
+
+		Velocity.y = -Velocity.y;
+	}
+	else if(halfSide < (Position.y + ballRadius))
+	{
+		howMuch = (Position.y + ballRadius) - halfSide;
+		Force.y -= wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.y * Velocity.y;
+		newKE = KE * energyretention;
+
+		Velocity.y = sqrt(2 * newKE / SphereMass);
+
+		Velocity.y = -Velocity.y;
+	}
+	
+	if((Position.z - ballRadius) < -halfSide)
+	{
+		howMuch = -halfSide - (Position.z - ballRadius);
+		Force.z += wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.z * Velocity.z;
+		newKE = KE * energyretention;
+		
+		Velocity.z = sqrt(2 * newKE / SphereMass);
+
+		Velocity.z = -Velocity.z;
+	}
+	else if(halfSide < (Position.z + ballRadius))
+	{
+		howMuch = (Position.z + ballRadius) - halfSide;
+		Force.z -= wallStiffness*howMuch;
+
+		KE = .5 * SphereMass * Velocity.z * Velocity.z;
+		newKE = KE * energyretention;
+		
+		Velocity.z = sqrt(2 * newKE / SphereMass);
+
+		Velocity.z = -Velocity.z;
+	}
+}*/
+
+
 
 void updatePositions()
 {
