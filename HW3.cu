@@ -272,6 +272,33 @@ void getForces()
 		}
 		for(int j = i + 1; j < NUMBER_OF_BALLS; j++)
 		{
+			//We will need to calculate the distance between the balls
+			// distance = sqrt((x2-x1)^2 + (y2-y1)^2 + (z2-z1)^2)
+			float Distance.x = Position[j].x - Position[i].x;		//x2 = Position[j].x and x1 = Position[i].x ...same thing for y and z
+			float Distance.y = Position[j].y - Position[i].y;		//local variables, putting down here to help myself and others read the code
+			float Distance.z = Position[j].z - Position[i].z;
+
+			float distance = sqrt((Distance.x * Distance.x) + (Distance.y * Distance.y) + (Distance.z * Distance.z));
+
+			//What happens when they collide?? I can use a if else statement, if the balls collide, then this will happen
+			//one radius from each ball will equal a full diameter
+			if (distance < SphereDiameter):		//So, is the distance between the two balls is less than the full diameter
+
+				//Direction of the ball after collision? Calculate a unit vector that points from the center of one ball to the center of the other ball
+				float Normal.x = Distance.x / distance;
+				float Normal.y = Distance.y / distance;
+				float Normal.z = Distance.z / distance;
+
+				//Relative velocity. This is to measure how fast two objects are moving with respect to each other
+				//Vab = Va - Vb
+				float RelativeVelocity.x = Velocity[j].x - Velocity[i].x;
+				float RelativeVelocity.y = Velocity[j].y - Velocity[i].y;
+				float RelativeVelocity.z = Velocity[j].z - Velocity[i].z;
+
+				//Calculate the speed both balls are moving towards each other
+				float impact = RelativeVelocity.x*Normal.x + RelativeVelocity.y*Normal.y + RelativeVelocity.z*Normal.z
+
+
 			// Maybe put something here and do it for i and the opposite for j.
 			// Might also need to think about magna-dude and unit vectors.
 			//
