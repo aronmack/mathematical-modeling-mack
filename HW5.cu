@@ -14,7 +14,7 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
-#define NUMBER_OF_BALLS 20
+#define NUMBER_OF_BALLS 10
 #define PI 3.14159
 using namespace std;
 
@@ -33,7 +33,7 @@ int Pause;
 float MassUnitConverter;
 float LengthUnitConverter;
 float TimeUnitConverter;
-float GavityConstant;
+float GravityConstant;
 
 // Window globals
 static int Window;
@@ -116,33 +116,36 @@ void setInitailConditions()
 	// If you multiply one of our units by this number it will convert it to the outside world units.
 	// If you divide an outside world unit by this number it will convert it to our units
 	// Set your convertion units then print them out.
+
+	// Convertion units
 	// Uncomment these and fix them.
-	// MassUnitConverter = ???; // kg
-	// LengthUnitConverter = ???; // km
-	// TimeUnitConverter = ???; // hr
-	// printf("\n MassUnitConverter = %f kilograms", MassUnitConverter);
-	// printf("\n LengthUnitConverter = %f kilometers", LengthUnitConverter);
-	// printf("\n TimeUnitConverter = %f hours", TimeUnitConverter);
+	MassUnitConverter = (9.383E20)/(9.38E20); // kg
+	LengthUnitConverter = 940/940; // km
+	TimeUnitConverter = 3640/3600; // hr
+	printf("\n MassUnitConverter = %f kilograms", MassUnitConverter);
+	printf("\n LengthUnitConverter = %f kilometers", LengthUnitConverter);
+	printf("\n TimeUnitConverter = %f hours", TimeUnitConverter);
 	
 	// ??????????????????????????????????????????????????????????
-	// Set the GavityConstant. and print it out.
+	// Set the GravityConstant. and print it out.
 	// Uncomment these and fix them.
-	// GavityConstant = ???;
-	// printf("\n The gavity constant = %f in our units", GavityConstant);
+	GravityConstant = 6.67E-11;
+	printf("\n The gravity constant = %f in our units", GravityConstant);
 	
 	// ??????????????????????????????????????????????????????????
 	// Anything with a mass, time or length needs to be thought about.
 	// Coment about each of these. Most will may not need to be changed but just say why.
-	SphereDiameter = 0.5;
-	sphereRadius = SphereDiameter/2.0;
-	SphereMass = 1.0;
-	BoxSideLength = 5.0;
-	MaxVelocity = 10.0;
-	halfBoxSideLength = BoxSideLength/2.0;
+	SphereDiameter = 1.0;	//it was 0.5, but I changed it to 1 to make it easier
+	sphereRadius = SphereDiameter/2.0;	//good match because you divide the diameter by two to find the radius
+	SphereMass = 1.0;	//this is a good match because 1 oMunits = 9.383*10^20 kg
+	BoxSideLength = 5.0;	//
+	MaxVelocity = 10.0;	//
+	halfBoxSideLength = BoxSideLength/2.0;	//
 	
 	// ??????????????????????????????????????????????????????????
 	// Print out how many kilometers long each box side is.
 	// Print out how many kilometers/hour the max Velocity is.
+	
 	// Uncomment these and fix them.
 	//printf("\n Box side length = %f kilometers", ???);
 	//printf("\n Max velocity = %f kilometers/hour", ???);
@@ -188,12 +191,13 @@ void setInitailConditions()
 		// Asteriods are brown not just any color. 
 		// Well I have not seen many asteriods maybe they are all the colors in the rainbow.
 		// But make them brown anyway. 
-		randomNumber = ((float)rand()/(float)RAND_MAX);
-		Color[i].x = randomNumber;
-		randomNumber = ((float)rand()/(float)RAND_MAX);
-		Color[i].y = randomNumber;
-		randomNumber = ((float)rand()/(float)RAND_MAX);
-		Color[i].z = randomNumber;
+		
+		randomNumber = ((float)rand()/(float)RAND_MAX)*0.1 + 0.36;
+		Color[i].x = randomNumber;		//Color[i].x = red
+		randomNumber = ((float)rand()/(float)RAND_MAX)*0.1 + 0.25;
+		Color[i].y = randomNumber;		//Color[i].y = green
+		randomNumber = ((float)rand()/(float)RAND_MAX)*0.1 + 0.20;
+		Color[i].z = randomNumber;		//Color[i].z = blue
 		
 		Force[i].x = 0.0;
 		Force[i].y = 0.0;
