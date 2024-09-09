@@ -14,7 +14,7 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
-#define NUMBER_OF_BALLS 10
+#define NUMBER_OF_BALLS 20
 #define PI 3.14159
 using namespace std;
 
@@ -119,8 +119,8 @@ void setInitailConditions()
 
 	// Convertion units
 	// Uncomment these and fix them.
-	MassUnitConverter = (9.383E20)/(9.38E20); // kg
-	LengthUnitConverter = 940/940; // km
+	MassUnitConverter = (6.383E20); // kg
+	LengthUnitConverter = 940; // km
 	TimeUnitConverter = 3640/3600; // hr
 	printf("\n MassUnitConverter = %f kilograms", MassUnitConverter);
 	printf("\n LengthUnitConverter = %f kilometers", LengthUnitConverter);
@@ -129,7 +129,7 @@ void setInitailConditions()
 	// ??????????????????????????????????????????????????????????
 	// Set the GravityConstant. and print it out.
 	// Uncomment these and fix them.
-	GravityConstant = 6.67E-11;
+	GravityConstant = 1.0;
 	printf("\n The gravity constant = %f in our units", GravityConstant);
 	
 	// ??????????????????????????????????????????????????????????
@@ -138,17 +138,17 @@ void setInitailConditions()
 	SphereDiameter = 1.0;	//it was 0.5, but I changed it to 1 to make it easier
 	sphereRadius = SphereDiameter/2.0;	//good match because you divide the diameter by two to find the radius
 	SphereMass = 1.0;	//this is a good match because 1 oMunits = 9.383*10^20 kg
-	BoxSideLength = 5.0;	//
+	BoxSideLength = 5.0;	//good match because all of the asteroids fit in the box?
 	MaxVelocity = 10.0;	//
-	halfBoxSideLength = BoxSideLength/2.0;	//
+	halfBoxSideLength = BoxSideLength/2.0;	//good match because half of the length is just the full length divided by 2
 	
 	// ??????????????????????????????????????????????????????????
 	// Print out how many kilometers long each box side is.
 	// Print out how many kilometers/hour the max Velocity is.
 	
 	// Uncomment these and fix them.
-	//printf("\n Box side length = %f kilometers", ???);
-	//printf("\n Max velocity = %f kilometers/hour", ???);
+	printf("\n Box side length = %f kilometers", BoxSideLength);
+	printf("\n Max velocity = %f kilometers/hour", MaxVelocity);
 	
 	
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
@@ -206,7 +206,7 @@ void setInitailConditions()
 	
 	// ?????????????????????????????????????????
 	// Make this a 10 day long run
-	TotalRunTime = 10000.0;
+	TotalRunTime = 10.0 * 24.0;		//10 days * 24 hours bc 1 day = 24 hours & the time units are in hours
 	RunTime = 0.0;
 	Dt = 0.001;
 }
@@ -279,7 +279,7 @@ void getForces()
 	float d, dx, dy, dz;
 	float magnitude;
 	
-	kBall = 1000.0;
+	kBall = 10000.0;	//changed from 1000 to 10000 for a stiffer bounce against each other
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{
 		Force[i].x = 0.0;
@@ -341,7 +341,7 @@ void getForces()
 			// This causes the asteroids to bounce off of each other.
 			if(d < SphereDiameter)
 			{
-				magnitude = kBall*d;
+				magnitude = kBall*(SphereDiameter-d);
 				// Doling out the force in the proper perfortions using unit vectors.
 				Force[i].x -= magnitude*(dx/d);
 				Force[i].y -= magnitude*(dy/d);
@@ -355,7 +355,8 @@ void getForces()
 			// ???????????????????????????????????????????????????????
 			// Add gravity between asteroids here.
 			
-			
+			float Gravitaionalforce = (GravityConstant * SphereMass * SphereMass) / d;	//Gravitational force formula is G*M1*M2/r^2
+
 			// Two elderly ladies get pulled over by a cop on I-35 in Dallas.
 			// The cop says "Mam you were going 35 miles an hour in a 70. You are causing a trafic jam 
 			// and may get someone, perhaps yourself, hurt".
@@ -398,7 +399,7 @@ void nBody()
 	drawPicture();
 	// ??????????????????????????????????????????????
 	// Print the time out in hours.
-	printf("\n Time = %f hours ???", RunTime);
+	printf("\n Time = %f hours converted from seconds", RunTime * TimeUnitConverter);	//multiplying it by TimeUnitConverter to convert the seconds to hours
 	RunTime += Dt;
 	
 	if(TotalRunTime < RunTime)
