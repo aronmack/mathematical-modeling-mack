@@ -147,8 +147,8 @@ void setInitailConditions()
 	// Print out how many kilometers/hour the max Velocity is.
 	
 	// Uncomment these and fix them.
-	printf("\n Box side length = %f kilometers", BoxSideLength);
-	printf("\n Max velocity = %f kilometers/hour", MaxVelocity * (LengthUnitConverter/TimeUnitConverter));
+	printf("\n Box side length = %f kilometers", BoxSideLength*LengthUnitConverter);
+	printf("\n Max velocity = %f kilometers/hour", MaxVelocity*LengthUnitConverter/TimeUnitConverter);
 	
 	
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
