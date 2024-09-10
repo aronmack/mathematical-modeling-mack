@@ -148,7 +148,7 @@ void setInitailConditions()
 	
 	// Uncomment these and fix them.
 	printf("\n Box side length = %f kilometers", BoxSideLength);
-	printf("\n Max velocity = %f kilometers/hour", MaxVelocity);
+	printf("\n Max velocity = %f kilometers/hour", MaxVelocity * (LengthUnitConverter/TimeUnitConverter));
 	
 	
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
@@ -206,7 +206,7 @@ void setInitailConditions()
 	
 	// ?????????????????????????????????????????
 	// Make this a 10 day long run
-	TotalRunTime = 10.0 * 24.0;		//10 days * 24 hours bc 1 day = 24 hours & the time units are in hours
+	TotalRunTime = 10.0 * 24.0 / TimeUnitConverter;		//10 days * 24 hours bc 1 day = 24 hours & the time units are in hours
 	RunTime = 0.0;
 	Dt = 0.001;
 }
@@ -355,7 +355,7 @@ void getForces()
 			// ???????????????????????????????????????????????????????
 			// Add gravity between asteroids here.
 			
-			float Gravitaionalforce = (GravityConstant * SphereMass * SphereMass) / d;	//Gravitational force formula is G*M1*M2/r^2
+			float Gravitationalforce = (GravityConstant * SphereMass * SphereMass) / d*d;	//Gravitational force formula is G*M1*M2/r^2
 
 			// Two elderly ladies get pulled over by a cop on I-35 in Dallas.
 			// The cop says "Mam you were going 35 miles an hour in a 70. You are causing a trafic jam 
