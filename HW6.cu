@@ -14,7 +14,7 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
-#define NUMBER_OF_BALLS 20
+#define NUMBER_OF_BALLS 200
 #define PI 3.14159
 using namespace std;
 
@@ -153,7 +153,7 @@ void setInitailConditions()
 {
 	time_t t;
 	float randomNumber;
-	float sphereRadius;
+	//float sphereRadius;
 	float seperation;
 	int test;
 	
@@ -205,9 +205,9 @@ void setInitailConditions()
 			// ?????????????????????????????????????????????
 			// Change this from a box to a sphere.
 			// Get random position.
-			randomNumber = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)* maxSphereSize;	//0 <= R <= Max
-			angle1 = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)* 2.0 * PI;		//0 <= theta1 <= 2PI
-			angle2 = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)* PI;		//0 <= theta2 <= PI
+			randomNumber = ((float)rand()/(float)RAND_MAX)* maxSphereSize;	//0 <= R <= Max
+			angle1 = ((float)rand()/(float)RAND_MAX)* 2.0 * PI;		//0 <= theta1 <= 2PI
+			angle2 = ((float)rand()/(float)RAND_MAX)* PI;		//0 <= theta2 <= PI
 			
 			
 			Position[i].x = randomNumber * cos(angle2) * cos(angle1);	//x = R*cos(theta2)*cos(theta1)
@@ -280,9 +280,9 @@ void getForces()
 	
 	// ????????????????????????????????????????????
 	// These are a new variable you will use when making the asteroids collide inelastically. 
-	// float inOut;
-	// float kSphereReduction;
-	// float dvx, dvy, dvz;
+	float inOut;
+	float kSphereReduction;
+	float dvx, dvy, dvz;
 	
 	float kSphere;
 	float sphereRadius = SphereDiameter/2.0;
@@ -324,32 +324,18 @@ void getForces()
 					printf("\n Spheres %d and %d got to close. Make your sphere repultion stronger\n", i, j);
 					exit(0);
 				}
-				float inOut = SphereDiameter - d;	// determines how much the spheres need to be separated
-				float kSphereReduction = 1.1;
-
-				float dvx = (Velocity[j].x - Velocity[i].x) / 2.0;	//calculates avg difference in velocity along the x-axis b/w the spheres
-				float dvy = (Velocity[j].y - Velocity[i].y) / 2.0;
-				float dvz = (Velocity[j].z - Velocity[i].z) / 2.0;
-
-				Velocity[i].x += dvx;	//adds half the velocity difference and updates
-				Velocity[i].y += dvy;
-				Velocity[i].z += dvz;
-
-				Velocity[j].x -= dvx;	//subtracts half the velocity difference and updates
-				Velocity[j].y -= dvy;
-				Velocity[j].z -= dvz;
 				
-				float adjustment = inOut / 2.0;		//determines the distance each sphere needs to move to separate them by half of the inOut distance
-                Position[i].x -= adjustment * (dx / d);		//moves i away from j along the x direction
-                Position[i].y -= adjustment * (dy / d);
-                Position[i].z -= adjustment * (dz / d);
+				kSphereReduction = 0.5;
 
-                Position[j].x += adjustment * (dx / d);		//moves j away from i along the x direction
-                Position[j].y += adjustment * (dy / d);
-                Position[j].z += adjustment * (dz / d);
+				dvx = (Velocity[j].x - Velocity[i].x);	
+				dvy = (Velocity[j].y - Velocity[i].y);
+				dvz = (Velocity[j].z - Velocity[i].z);
+				
+				inOut = dx*dvx + dy*dvy + dz*dvz;
 
-				magnitude = kSphere*inOut*kSphereReduction;	//calculate total magnitude of the repulsion force
-				// Doling out the force in the proper perfortions using unit vectors.
+				if(inOut < 0.0) magnitude = kSphere*(SphereDiameter-d);
+				else magnitude = kSphere*kSphereReduction*(SphereDiameter-d);
+				
 				Force[i].x -= magnitude*(dx/d);
 				Force[i].y -= magnitude*(dy/d);
 				Force[i].z -= magnitude*(dz/d);
