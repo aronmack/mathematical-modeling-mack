@@ -1,4 +1,4 @@
-//nvcc HW6.cu -o bounce -lglut -lm -lGLU -lGL																													
+//nvcc HW6AsteriodsLocalDampingBroken1.cu -o bounce -lglut -lm -lGLU -lGL																													
 //To stop hit "control c" in the window you launched it from.
 #include <iostream>
 #include <fstream>
@@ -35,7 +35,7 @@ int PrintCount;
 float MassUnitConverter;
 float LengthUnitConverter;
 float TimeUnitConverter;
-float GavityConstant;
+float GravityConstant;
 
 // Window globals
 static int Window;
@@ -102,6 +102,32 @@ void KeyPressed(unsigned char key, int x, int y)
 	
 	// ?????????????????????????????????????????????????????????????
 	// Add left, right, up, and down functionality to your simulation.
+	float dx = 0.05f;	//defines the amount of translation along the x-axis
+	if(key == 'd')
+	{
+		glTranslatef(-dx, 0.0, 0.0);
+		drawPicture();
+		terminalPrint();
+	}
+	if(key == 'a')
+	{
+		glTranslatef(dx, 0.0, 0.0);
+		drawPicture();
+	}
+	
+	float dy = 0.05f;
+	if(key == 'w')
+	{
+		glTranslatef(0.0, -dy, 0.0);
+		drawPicture();
+		terminalPrint();
+	}
+	if(key == 's')
+	{
+		glTranslatef(0.0, dy, 0.0);
+		drawPicture();
+	}
+	
 	float dz = 0.05f;
 	if(key == 'z')
 	{
@@ -127,7 +153,6 @@ void setInitailConditions()
 {
 	time_t t;
 	float randomNumber;
-	float halfBoxSideLength;
 	float sphereRadius;
 	float seperation;
 	int test;
@@ -152,28 +177,24 @@ void setInitailConditions()
 	printf("\n TimeUnitConverter = %e hours", TimeUnitConverter);
 	
 	// If we did everthing right the universal gravity constant should be 1.
-	GavityConstant = 1.0;
-	printf("\n The gavity constant = %f in our units", GavityConstant);
+	GravityConstant = 1.0;
+	printf("\n The gravity constant = %f in our units", GravityConstant);
 	
 	// All spheres are the same diameter and mass of Ceres so these should be 1..
 	SphereDiameter = 1.0;
 	SphereMass = 1.0;
-	sphereRadius = SphereDiameter/2.0;
+	//sphereRadius = SphereDiameter/2.0;
 	
 	// You get to pick this but it is nice to print it out in common units to get a feel for what it is.
 	MaxVelocity = 1.0;
 	printf("\n Max velocity = %f kilometers/hour or %f miles/hour", MaxVelocity*LengthUnitConverter/TimeUnitConverter, (MaxVelocity*LengthUnitConverter/TimeUnitConverter)*0.621371);
 	
 	// ??????????????????????????????????????????????????
-	// Take the asteroids out of the box so you will not need these. Also remove them from the set of global and local variables 
-	BoxSideLength = 10.0;
-	halfBoxSideLength = BoxSideLength/2.0;
-	printf("\n Box side length = %f kilometers", BoxSideLength*LengthUnitConverter);
-	
-	// ??????????????????????????????????????????????????
 	// You will be initially putting the asteroids inside a big sphere 
 	// so you will need a local variable call it maxSphereSize and two other local variables
 	// call them angle1 and angle2.
+	float maxSphereSize = 10.0;
+	float angle1, angle2;
 	
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{
@@ -184,13 +205,14 @@ void setInitailConditions()
 			// ?????????????????????????????????????????????
 			// Change this from a box to a sphere.
 			// Get random position.
-			randomNumber = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)*(halfBoxSideLength - sphereRadius);
-			Position[i].x = randomNumber;
-			randomNumber = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)*(halfBoxSideLength - sphereRadius);
-			Position[i].y = randomNumber;
-			randomNumber = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)*(halfBoxSideLength - sphereRadius);
-			Position[i].z = randomNumber;
+			randomNumber = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)* maxSphereSize;	//0 <= R <= Max
+			angle1 = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)* 2.0 * PI;		//0 <= theta1 <= 2PI
+			angle2 = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)* PI;		//0 <= theta2 <= PI
 			
+			
+			Position[i].x = randomNumber * cos(angle2) * cos(angle1);	//x = R*cos(theta2)*cos(theta1)
+			Position[i].y = randomNumber * sin(angle2);		//x = R*sin(theta2)
+			Position[i].z = randomNumber * cos(angle2) * sin(angle1);	//x = R*cos(theta2)*sin(theta1)
 			// Making sure the balls centers are at least a diameter apart.
 			// If they are not throw these positions away and try again.
 			test = 1;
@@ -240,8 +262,6 @@ void drawPicture()
 		glClear(GL_DEPTH_BUFFER_BIT);
 	}
 	
-	float halfSide = BoxSideLength/2.0;
-	
 	// Drawing balls.
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{
@@ -252,54 +272,11 @@ void drawPicture()
 		glPopMatrix();
 	}
 	
-	// ????????????????????????????????????????????????????????
-	// If the asteroids are not going to live in a box why draw it. 
-	glLineWidth(3.0);
-	//Drawing front of box
-	glColor3d(0.0, 1.0, 0.0);
-	glBegin(GL_LINE_LOOP);
-		glVertex3f(-halfSide, -halfSide, halfSide);
-		glVertex3f(halfSide, -halfSide, halfSide);
-		glVertex3f(halfSide, halfSide, halfSide);
-		glVertex3f(-halfSide, halfSide, halfSide);
-		glVertex3f(-halfSide, -halfSide, halfSide);
-	glEnd();
-	//Drawing back of box
-	glColor3d(1.0, 1.0, 1.0);
-	glBegin(GL_LINE_LOOP);
-		glVertex3f(-halfSide, -halfSide, -halfSide);
-		glVertex3f(halfSide, -halfSide, -halfSide);
-		glVertex3f(halfSide, halfSide, -halfSide);
-		glVertex3f(-halfSide, halfSide, -halfSide);
-		glVertex3f(-halfSide, -halfSide, -halfSide);
-	glEnd();
-	// Finishing off right side
-	glBegin(GL_LINES);
-		glVertex3f(halfSide, halfSide, halfSide);
-		glVertex3f(halfSide, halfSide, -halfSide);
-		glVertex3f(halfSide, -halfSide, halfSide);
-		glVertex3f(halfSide, -halfSide, -halfSide);
-	glEnd();
-	// Finishing off left side
-	glBegin(GL_LINES);
-		glVertex3f(-halfSide, halfSide, halfSide);
-		glVertex3f(-halfSide, halfSide, -halfSide);
-		glVertex3f(-halfSide, -halfSide, halfSide);
-		glVertex3f(-halfSide, -halfSide, -halfSide);
-	glEnd();
-	
 	glutSwapBuffers();
 }
 
 void getForces()
 {
-	// ????????????????????????????????????????????
-	// We aren't going to have walls in our new world so you will not need these.
-	float wallStiffnessIn = 10000.0;
-	float wallStiffnessOut = 8000.0;
-	float kWall;
-	float halfSide = BoxSideLength/2.0;
-	float amiuntOut;
 	
 	// ????????????????????????????????????????????
 	// These are a new variable you will use when making the asteroids collide inelastically. 
@@ -321,56 +298,9 @@ void getForces()
 	}
 	
 	kSphere = 1000.0;
+
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{	
-		// ???????????????????????????????????????????????????????????????????
-		// Asteroids are free spirits. You can't keep them in a box. 
-		// Take them out of the box and let them run free, as they were meant to live!
-		if((Position[i].x - sphereRadius) < -halfSide)
-		{
-			amiuntOut = -halfSide - (Position[i].x - sphereRadius);
-			if(Velocity[i].x < 0.0) kWall = wallStiffnessIn;
-			else kWall = wallStiffnessOut;
-			Force[i].x += kWall*amiuntOut;
-		}
-		else if(halfSide < (Position[i].x + sphereRadius))
-		{
-			amiuntOut = (Position[i].x + sphereRadius) - halfSide;
-			if(0.0 < Velocity[i].x) kWall = wallStiffnessIn;
-			else kWall = wallStiffnessOut;
-			Force[i].x -= kWall*amiuntOut;
-		}
-		
-		if((Position[i].y - sphereRadius) < -halfSide)
-		{
-			amiuntOut = -halfSide - (Position[i].y - sphereRadius);
-			if(Velocity[i].y < 0.0) kWall = wallStiffnessIn;
-			else kWall = wallStiffnessOut;
-			Force[i].y += kWall*amiuntOut;
-		}
-		else if(halfSide < (Position[i].y + sphereRadius))
-		{
-			amiuntOut = (Position[i].y + sphereRadius) - halfSide;
-			if(0.0 < Velocity[i].y) kWall = wallStiffnessIn;
-			else kWall = wallStiffnessOut;
-			Force[i].y -= kWall*amiuntOut;
-		}
-		
-		if((Position[i].z - sphereRadius) < -halfSide)
-		{
-			amiuntOut = -halfSide - (Position[i].z - sphereRadius);
-			if(Velocity[i].z < 0.0) kWall = wallStiffnessIn;
-			else kWall = wallStiffnessOut;
-			Force[i].z += kWall*amiuntOut;
-		}
-		else if(halfSide < (Position[i].z + sphereRadius))
-		{
-			amiuntOut = (Position[i].z + sphereRadius) - halfSide;
-			if(0.0 < Velocity[i].z) kWall = wallStiffnessIn;
-			else kWall = wallStiffnessOut;
-			Force[i].z -= kWall*amiuntOut;
-		}
-		
 		for(int j = 0; j < i; j++)
 		{
 			dx = Position[j].x - Position[i].x;
@@ -389,12 +319,36 @@ void getForces()
 			{
 				// ?????????????????
 				// I did the radius check for you.
-				//if(d < sphereRadius)
-				//{
-					//printf("\n Spheres %d and %d got to close. Make your sphere repultion stronger\n", i, j);
-					//exit(0);
-				//}
-				magnitude = kSphere*(SphereDiameter - d);
+				if(d < sphereRadius)
+				{
+					printf("\n Spheres %d and %d got to close. Make your sphere repultion stronger\n", i, j);
+					exit(0);
+				}
+				float inOut = SphereDiameter - d;	// determines how much the spheres need to be separated
+				float kSphereReduction = 1.1;
+
+				float dvx = (Velocity[j].x - Velocity[i].x) / 2.0;	//calculates avg difference in velocity along the x-axis b/w the spheres
+				float dvy = (Velocity[j].y - Velocity[i].y) / 2.0;
+				float dvz = (Velocity[j].z - Velocity[i].z) / 2.0;
+
+				Velocity[i].x += dvx;	//adds half the velocity difference and updates
+				Velocity[i].y += dvy;
+				Velocity[i].z += dvz;
+
+				Velocity[j].x -= dvx;	//subtracts half the velocity difference and updates
+				Velocity[j].y -= dvy;
+				Velocity[j].z -= dvz;
+				
+				float adjustment = inOut / 2.0;		//determines the distance each sphere needs to move to separate them by half of the inOut distance
+                Position[i].x -= adjustment * (dx / d);		//moves i away from j along the x direction
+                Position[i].y -= adjustment * (dy / d);
+                Position[i].z -= adjustment * (dz / d);
+
+                Position[j].x += adjustment * (dx / d);		//moves j away from i along the x direction
+                Position[j].y += adjustment * (dy / d);
+                Position[j].z += adjustment * (dz / d);
+
+				magnitude = kSphere*inOut*kSphereReduction;	//calculate total magnitude of the repulsion force
 				// Doling out the force in the proper perfortions using unit vectors.
 				Force[i].x -= magnitude*(dx/d);
 				Force[i].y -= magnitude*(dy/d);
@@ -406,7 +360,7 @@ void getForces()
 			}
 			
 			// This adds the gravity between asteroids.
-			magnitude = GavityConstant*SphereMass*SphereMass/(d*d);
+			magnitude = GravityConstant*SphereMass*SphereMass/(d*d);
 			Force[i].x += magnitude*(dx/d);
 			Force[i].y += magnitude*(dy/d);
 			Force[i].z += magnitude*(dz/d);
@@ -513,6 +467,12 @@ void terminalPrint()
 	// ????????????????????????????????????????
 	// let people know how to move left, right, up, and down.
 	printf("\n");
+	printf("\n a/d: Move left/move right");
+	
+	printf("\n");
+	printf("\n s/w: Move down/move up");
+
+	printf("\n");
 	printf("\n Z/z: Move in move out");
 	
 	printf("\033[0m");
@@ -542,7 +502,7 @@ void terminalPrint()
 	printf(" q: Terminates the simulation");
 	
 	// Print the time out in hours.
-	printf("\n\n Time = %f \033[0;34mhours", RunTime/TimeUnitConverter);
+	printf("\n\n Time = %f \033[0;34mhours", RunTime*TimeUnitConverter);
 	printf("\033[0m");
 	printf("\n");
 }
