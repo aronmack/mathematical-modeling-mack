@@ -14,7 +14,7 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
-#define NUMBER_OF_BALLS 30
+#define NUMBER_OF_BALLS 100
 #define PI 3.14159
 using namespace std;
 
@@ -34,7 +34,7 @@ int PrintCount;
 float MassUnitConverter;
 float LengthUnitConverter;
 float TimeUnitConverter;
-float GavityConstant;
+float GravityConstant;
 
 // Window globals
 static int Window;
@@ -72,8 +72,8 @@ void Display()
 	drawPicture();
 }
 
-void idle()
-{
+void idle()	Velocity[i].y = 0.0;
+{		Velocity[i].z = 0.0;
 	if(Pause == 0) nBody();
 }
 
@@ -86,7 +86,15 @@ void KeyPressed(unsigned char key, int x, int y)
 {
 	// ??????????????????????????????????????????????
 	// Make a key that will propel the asteriod into your wall
-	
+	if(key == 'o')
+	{
+		for(int i = 0; i < NUMBER_OF_BALLS; i++)
+		{
+		Velocity[i].x = Velocity[i].x + 700.0;
+		}
+		drawPicture();
+		printf("\n The asteroid has been propelled.");
+	}
 	
 	if(key == 'k')
 	{
@@ -212,8 +220,8 @@ void setInitailConditions()
 	printf("\n TimeUnitConverter = %e hours", TimeUnitConverter);
 	
 	// If we did everthing right the universal gravity constant should be 1.
-	GavityConstant = 1.0;
-	printf("\n The gavity constant = %f in our units", GavityConstant);
+	GravityConstant = 1.0;
+	printf("\n The gravity constant = %f in our units", GravityConstant);
 	
 	// All spheres are the same diameter and mass of Ceres so these should be 1..
 	SphereDiameter = 1.0;
@@ -329,7 +337,7 @@ float4 centerOfMass()
 	
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{
-    		centerOfMass.x += Position[i].x*SphereMass;
+    	centerOfMass.x += Position[i].x*SphereMass;
 		centerOfMass.y += Position[i].y*SphereMass;
 		centerOfMass.z += Position[i].z*SphereMass;
 		totalMass += SphereMass;
@@ -374,6 +382,12 @@ void getForces()
 	float sphereRadius = SphereDiameter/2.0;
 	float d, dx, dy, dz;
 	float magnitude;
+	float kwall;
+	float amountOut;
+	float wallStiffnessIn = 10000.0;
+	float wallStiffnessOut = 8000.0;
+	float BoxSideLength;
+	float halfSide = BoxSideLength/2.0;
 	
 	// Zeroing forces outside of the force loop just to be safe.
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
@@ -383,15 +397,22 @@ void getForces()
 		Force[i].z = 0.0;
 	}
 	
-	kSphere = 1000.0;
+	kSphere = 10000.0;
 	kSphereReduction = 0.5;
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{	
 		// ?????????????????????????????????????????????????????
 		// Make the asteriods inilastically bounce off the wall.
-		
-		
-		
+		if(Position[i].y > -5.0 && Position[i].y < -5.0 && Position[i].z > -5.0 && Position[i].z < 5.0)
+		{
+			if(Position[i].x + sphereRadius > 25.0 && Position[i].x + sphereRadius < 26.0)		// 25 is the x position
+			{
+				amountOut = -halfSide - (Position[i].x - sphereRadius);
+				if(Velocity[i].x < 0.0) kWall = wallStiffnessIn;
+				else kWall = wallStiffnessOut;
+				Force[i].x += kWall*amountOut;
+			}
+		}
 		// This adds forces between asteriods.
 		for(int j = 0; j < i; j++)
 		{
@@ -406,7 +427,7 @@ void getForces()
 				// If the seperation gets smaller than a radius something is wrong.
 				if(d < sphereRadius)
 				{
-					printf("\n Spheres %d and %d got to close. Make your sphere repultion stronger\n", i, j);
+					printf("\n Spheres %d and %d got to close. Make your sphere repulsion stronger\n", i, j);
 					exit(0);
 				}
 				
@@ -428,7 +449,7 @@ void getForces()
 				
 				// This adds the gravity between asteroids but the gravity is lock in at what it 
 				// was at impact.
-				magnitude = GavityConstant*SphereMass*SphereMass/(SphereDiameter*SphereDiameter);
+				magnitude = GravityConstant*SphereMass*SphereMass/(SphereDiameter*SphereDiameter);
 				Force[i].x += magnitude*(dx/d);
 				Force[i].y += magnitude*(dy/d);
 				Force[i].z += magnitude*(dz/d);
@@ -440,7 +461,7 @@ void getForces()
 			else
 			{
 				// This adds the gravity between asteroids when they are not touching.
-				magnitude = GavityConstant*SphereMass*SphereMass/(d*d);
+				magnitude = GravityConstant*SphereMass*SphereMass/(d*d);
 				Force[i].x += magnitude*(dx/d);
 				Force[i].y += magnitude*(dy/d);
 				Force[i].z += magnitude*(dz/d);
@@ -542,7 +563,8 @@ void terminalPrint()
 	printf("\n 1: Will print the center of mass and the linear velocity of the system.");
 	// ????????????????????????????????????????????
 	// Tell people about your new key
-	
+	printf("\n o: Will propel the asteriod into the wall.");
+
 	printf("\033[0m");
 	printf("\n t: Trace on/off toggle --> ");
 	printf(" Tracing is:");
