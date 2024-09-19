@@ -1,4 +1,4 @@
-//nvcc HitTheWallBroken.cu -o bounce -lglut -lm -lGLU -lGL																													
+//nvcc HW9.cu -o bounce -lglut -lm -lGLU -lGL																													
 //To stop hit "control c" in the window you launched it from.
 #include <iostream>
 #include <fstream>
