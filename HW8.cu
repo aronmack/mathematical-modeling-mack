@@ -86,22 +86,36 @@ void KeyPressed(unsigned char key, int x, int y)
 {
 	if(key == 'k')
 	{
-		//float4 pos, vel;
-		//Pause = 1;
-		//terminalPrint();
+		float4 pos = centerOfMass(), vel = linearVelocity();
+		Pause = 1;
+		terminalPrint();
 		// ??????????????????????????????????????????
 		// Zero out center of mass and linear velocity of the system.
-		//drawPicture();
+		for(int i = 0; i < NUMBER_OF_BALLS; i++)
+		{
+			Position[i].x = Position[i].x - pos.x;
+			Position[i].y = Position[i].y - pos.y;
+			Position[i].z = Position[i].z - pos.z;
+
+			Velocity[i].x = Velocity[i].x - vel.x;
+			Velocity[i].y = Velocity[i].y - vel.y;
+			Velocity[i].z = Velocity[i].z - vel.z;
+		}
+		drawPicture();
 		printf("\n The simulation has been zeroed out.\n");
 	}
 	
 	if(key == '1')
 	{
-		//float4 pos, vel;
-		//Pause = 1;
-		//terminalPrint();
+		float4 pos = centerOfMass(), vel = linearVelocity();
+		Pause = 1;
+		terminalPrint();
 		// ??????????????????????????????????????????
-		//Print out center of mass and linear velocity of the system.
+		//Print out center of mass and linear velocity of the system
+		
+    	printf("\n Center of Mass: (%f, %f, %f)",pos.x, pos.y, pos.z);
+    	printf("\n Linear Velocity: (%f, %f, %f)\n", vel.x, vel.y, vel.z);
+
 	}
 	
 	// Turns tracers on and off
@@ -250,6 +264,7 @@ void setInitailConditions()
 		Force[i].x = 0.0;
 		Force[i].y = 0.0;
 		Force[i].z = 0.0;
+		
 	}
 	
 	// Making it run for 10 days.
@@ -281,6 +296,17 @@ void drawPicture()
 	
 	// ???????????????????????????????????????????????
 	// Draw a cool 10X10 wall centered at (25,0,0) perpendicular to the x axis.
+	glLineWidth(3.0);
+	
+	float halfSide = 5.0;
+
+	glColor3d(.76,.90,.34);
+	glBegin(GL_QUADS);
+		glVertex3f(25, -halfSide, -halfSide);
+		glVertex3f(25, halfSide, -halfSide);
+		glVertex3f(25, halfSide, halfSide);
+		glVertex3f(25, -halfSide, halfSide);
+	glEnd();
 	
 	glutSwapBuffers();
 }
@@ -295,8 +321,17 @@ float4 centerOfMass()
 	
 	// ????????????????????????????????????????????????????????
 	// Return the center of mass of the system.
-
+	for(int i = 0; i < NUMBER_OF_BALLS; i++)
+	{
+		centerOfMass.x += Position[i].x * SphereMass;
+		centerOfMass.y += Position[i].y * SphereMass;
+		centerOfMass.z += Position[i].z * SphereMass;
+	}
 	
+	centerOfMass.x /= SphereMass * NUMBER_OF_BALLS;
+	centerOfMass.y /= SphereMass * NUMBER_OF_BALLS;
+	centerOfMass.z /= SphereMass * NUMBER_OF_BALLS;
+
 	return(centerOfMass);
 }
 
@@ -310,7 +345,17 @@ float4 linearVelocity()
 	
 	// ????????????????????????????????????????????????????????
 	// Return the linear velocity of the system.
-	
+	for(int i = 0; i < NUMBER_OF_BALLS; i++)
+	{
+		linearVelocity.x += Velocity[i].x * SphereMass;
+		linearVelocity.y += Velocity[i].y * SphereMass;
+		linearVelocity.z += Velocity[i].z * SphereMass;
+	}
+
+	linearVelocity.x /= SphereMass * NUMBER_OF_BALLS;
+	linearVelocity.y /= SphereMass * NUMBER_OF_BALLS;
+	linearVelocity.z /= SphereMass * NUMBER_OF_BALLS;
+
 	return(linearVelocity);
 }
 
