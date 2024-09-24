@@ -72,8 +72,8 @@ void Display()
 	drawPicture();
 }
 
-void idle()	Velocity[i].y = 0.0;
-{		Velocity[i].z = 0.0;
+void idle()
+{
 	if(Pause == 0) nBody();
 }
 
@@ -90,7 +90,7 @@ void KeyPressed(unsigned char key, int x, int y)
 	{
 		for(int i = 0; i < NUMBER_OF_BALLS; i++)
 		{
-		Velocity[i].x = Velocity[i].x + 700.0;
+		Velocity[i].x = Velocity[i].x + 50.0;
 		}
 		drawPicture();
 		printf("\n The asteroid has been propelled.");
@@ -206,7 +206,7 @@ void setInitailConditions()
 	// The units that we will use to contect us to the outside world are: 
 	// kilometers (km)
 	// kilograms (kg)
-	// hours (hr)
+	// hours (hr)BoxSide
 	// If you multiply one of our units by this number it will convert it the outside world units.
 	// If you divide an outside world unit by this number it will convert it to our units
 	// We are setting the mass unit to be the mass of Ceres.
@@ -382,11 +382,11 @@ void getForces()
 	float sphereRadius = SphereDiameter/2.0;
 	float d, dx, dy, dz;
 	float magnitude;
-	float kwall;
-	float amountOut;
+	float kWall;
+	float amiuntOut;
 	float wallStiffnessIn = 10000.0;
 	float wallStiffnessOut = 8000.0;
-	float BoxSideLength;
+	float BoxSideLength = 50.0;
 	float halfSide = BoxSideLength/2.0;
 	
 	// Zeroing forces outside of the force loop just to be safe.
@@ -397,21 +397,66 @@ void getForces()
 		Force[i].z = 0.0;
 	}
 	
-	kSphere = 10000.0;
+	kSphere = 20000.0;
 	kSphereReduction = 0.5;
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{	
 		// ?????????????????????????????????????????????????????
 		// Make the asteriods inilastically bounce off the wall.
-		if(Position[i].y > -5.0 && Position[i].y < -5.0 && Position[i].z > -5.0 && Position[i].z < 5.0)
+		// if(Position[i].y > -5.0 && Position[i].y < 5.0 && Position[i].z > -5.0 && Position[i].z < 5.0)
+		// {
+		// 	if(Position[i].x + sphereRadius > 25.0 && Position[i].x + sphereRadius < 26.0)		// 25 is the x position
+		// 	{
+		// 		amountOut = -halfSide - (Position[i].x - sphereRadius);
+		// 		if(Velocity[i].x < 0.0) kWall = wallStiffnessIn;
+		// 		else kWall = wallStiffnessOut;
+		// 		Force[i].x += kWall*amountOut;
+		// 	}
+		// }
+
+		if((Position[i].x - sphereRadius) < -halfSide)
 		{
-			if(Position[i].x + sphereRadius > 25.0 && Position[i].x + sphereRadius < 26.0)		// 25 is the x position
-			{
-				amountOut = -halfSide - (Position[i].x - sphereRadius);
-				if(Velocity[i].x < 0.0) kWall = wallStiffnessIn;
-				else kWall = wallStiffnessOut;
-				Force[i].x += kWall*amountOut;
-			}
+			amiuntOut = -halfSide - (Position[i].x - sphereRadius);
+			if(Velocity[i].x < 0.0) kWall = wallStiffnessIn;
+			else kWall = wallStiffnessOut;
+			Force[i].x += kWall*amiuntOut;
+		}
+		else if(halfSide < (Position[i].x + sphereRadius))
+		{
+			amiuntOut = (Position[i].x + sphereRadius) - halfSide;
+			if(0.0 < Velocity[i].x) kWall = wallStiffnessIn;
+			else kWall = wallStiffnessOut;
+			Force[i].x -= kWall*amiuntOut;
+		}
+		
+		if((Position[i].y - sphereRadius) < -halfSide)
+		{
+			amiuntOut = -halfSide - (Position[i].y - sphereRadius);
+			if(Velocity[i].y < 0.0) kWall = wallStiffnessIn;
+			else kWall = wallStiffnessOut;
+			Force[i].y += kWall*amiuntOut;
+		}
+		else if(halfSide < (Position[i].y + sphereRadius))
+		{
+			amiuntOut = (Position[i].y + sphereRadius) - halfSide;
+			if(0.0 < Velocity[i].y) kWall = wallStiffnessIn;
+			else kWall = wallStiffnessOut;
+			Force[i].y -= kWall*amiuntOut;
+		}
+		
+		if((Position[i].z - sphereRadius) < -halfSide)
+		{
+			amiuntOut = -halfSide - (Position[i].z - sphereRadius);
+			if(Velocity[i].z < 0.0) kWall = wallStiffnessIn;
+			else kWall = wallStiffnessOut;
+			Force[i].z += kWall*amiuntOut;
+		}
+		else if(halfSide < (Position[i].z + sphereRadius))
+		{
+			amiuntOut = (Position[i].z + sphereRadius) - halfSide;
+			if(0.0 < Velocity[i].z) kWall = wallStiffnessIn;
+			else kWall = wallStiffnessOut;
+			Force[i].z -= kWall*amiuntOut;
 		}
 		// This adds forces between asteriods.
 		for(int j = 0; j < i; j++)
