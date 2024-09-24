@@ -383,7 +383,7 @@ void getForces()
 	float d, dx, dy, dz;
 	float magnitude;
 	float kWall;
-	float amiuntOut;
+	float amountOut;
 	float wallStiffnessIn = 10000.0;
 	float wallStiffnessOut = 8000.0;
 	float BoxSideLength = 50.0;
@@ -416,47 +416,47 @@ void getForces()
 
 		if((Position[i].x - sphereRadius) < -halfSide)
 		{
-			amiuntOut = -halfSide - (Position[i].x - sphereRadius);
+			amountOut = -halfSide - (Position[i].x - sphereRadius);
 			if(Velocity[i].x < 0.0) kWall = wallStiffnessIn;
 			else kWall = wallStiffnessOut;
-			Force[i].x += kWall*amiuntOut;
+			Force[i].x += kWall*amountOut;
 		}
 		else if(halfSide < (Position[i].x + sphereRadius))
 		{
-			amiuntOut = (Position[i].x + sphereRadius) - halfSide;
+			amountOut = (Position[i].x + sphereRadius) - halfSide;
 			if(0.0 < Velocity[i].x) kWall = wallStiffnessIn;
 			else kWall = wallStiffnessOut;
-			Force[i].x -= kWall*amiuntOut;
+			Force[i].x -= kWall*amountOut;
 		}
 		
 		if((Position[i].y - sphereRadius) < -halfSide)
 		{
-			amiuntOut = -halfSide - (Position[i].y - sphereRadius);
+			amountOut = -halfSide - (Position[i].y - sphereRadius);
 			if(Velocity[i].y < 0.0) kWall = wallStiffnessIn;
 			else kWall = wallStiffnessOut;
-			Force[i].y += kWall*amiuntOut;
+			Force[i].y += kWall*amountOut;
 		}
 		else if(halfSide < (Position[i].y + sphereRadius))
 		{
-			amiuntOut = (Position[i].y + sphereRadius) - halfSide;
+			amountOut = (Position[i].y + sphereRadius) - halfSide;
 			if(0.0 < Velocity[i].y) kWall = wallStiffnessIn;
 			else kWall = wallStiffnessOut;
-			Force[i].y -= kWall*amiuntOut;
+			Force[i].y -= kWall*amountOut;
 		}
 		
 		if((Position[i].z - sphereRadius) < -halfSide)
 		{
-			amiuntOut = -halfSide - (Position[i].z - sphereRadius);
+			amountOut = -halfSide - (Position[i].z - sphereRadius);
 			if(Velocity[i].z < 0.0) kWall = wallStiffnessIn;
 			else kWall = wallStiffnessOut;
-			Force[i].z += kWall*amiuntOut;
+			Force[i].z += kWall*amountOut;
 		}
 		else if(halfSide < (Position[i].z + sphereRadius))
 		{
-			amiuntOut = (Position[i].z + sphereRadius) - halfSide;
+			amountOut = (Position[i].z + sphereRadius) - halfSide;
 			if(0.0 < Velocity[i].z) kWall = wallStiffnessIn;
 			else kWall = wallStiffnessOut;
-			Force[i].z -= kWall*amiuntOut;
+			Force[i].z -= kWall*amountOut;
 		}
 		// This adds forces between asteriods.
 		for(int j = 0; j < i; j++)
