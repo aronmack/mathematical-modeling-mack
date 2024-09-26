@@ -14,7 +14,7 @@
 #include <curand.h>
 #include <curand_kernel.h>
 
-#define NUMBER_OF_BALLS 30
+#define NUMBER_OF_BALLS 100
 #define PI 3.14159
 using namespace std;
 
@@ -93,7 +93,7 @@ void KeyPressed(unsigned char key, int x, int y)
 		
 		for(int i = 0; i < NUMBER_OF_BALLS; i++)
 		{
-			Velocity[i].x += 70.0;
+			Velocity[i].x += 20.0;
 			Velocity[i].y += 0.0;
 			Velocity[i].z += 0.0;
 		}
