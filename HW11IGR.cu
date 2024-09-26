@@ -93,7 +93,7 @@ void KeyPressed(unsigned char key, int x, int y)
 		
 		for(int i = 0; i < NUMBER_OF_BALLS; i++)
 		{
-			Velocity[i].x += 20.0;
+			Velocity[i].x += 70.0;
 			Velocity[i].y += 0.0;
 			Velocity[i].z += 0.0;
 		}
@@ -300,8 +300,8 @@ void drawPicture()
 	// Drawing the wall.
 	glLineWidth(3.0);
 	//Drawing front of box
-	glColor3d(0.0, 1.0, 0.0);
-	glBegin(GL_LINE_LOOP);
+	glColor3d(0.0, 0.0, 0.50);
+	glBegin(GL_QUADS);
 		glVertex3f(25.0, -5.0, 5.0);
 		glVertex3f(25.0, -5.0, -5.0);
 		glVertex3f(25.0, 5.0, -5.0);
@@ -309,7 +309,7 @@ void drawPicture()
 		glVertex3f(25.0, -5.0, 5.0);
 	glEnd();
 	
-	glColor3d(1.0, 0.0, 0.0);
+	glColor3d(0.0, 0.0, 0.0);
 	glPointSize(10.0f);
 	glBegin(GL_POINTS);
 		glVertex3f(25.0f, 0.0f, 0.0f);
@@ -387,7 +387,7 @@ void zeroOutSystem()
 void getForces()
 {
 	float inOut;
-	float kSphere,kSphereReduction;
+	float c,cSphereReduction;		//c and cSphereReduction are in place of kSphere and kSphereReduction
 	float kWall, kWallReduction;
 	float4 d, unit, dv;
 	float magnitude;
@@ -404,8 +404,8 @@ void getForces()
 	
 	kWall = 20000.0;
 	kWallReduction = 0.2;
-	kSphere = 10000.0;
-	kSphereReduction = 0.5;
+	c = 10000.0;
+	cSphereReduction = 0.5;
 	for(int i = 0; i < NUMBER_OF_BALLS; i++)
 	{	
 		if(25.0 < Position[i].x + SphereDiameter/2.0 && Position[i].x + SphereDiameter/2.0 < 26.0)
@@ -456,8 +456,8 @@ void getForces()
 				inOut = d.x*dv.x + d.y*dv.y + d.z*dv.z;
 				// ??????????????????????????????????????????????
 				// Make this be an an ideal gas repulsion model.. 
-				if(inOut < 0.0) magnitude = kSphere*(SphereDiameter- d.w); // If inOut is negative the sphere are converging.
-				else magnitude = kSphereReduction*kSphere*(SphereDiameter- d.w); // If inOut is positive the sphere are diverging.
+				if(inOut < 0.0) magnitude = c*intersectionArea/bodyVolume; // If inOut is negative the sphere are converging.
+				else magnitude = cSphereReduction*c*intersectionArea/bodyVolume; // If inOut is positive the sphere are diverging.
 				
 				// Doling out the force in the proper perfortions using unit vectors.
 				Force[i].x -= magnitude*unit.x;
