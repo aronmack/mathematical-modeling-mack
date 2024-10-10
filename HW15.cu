@@ -38,7 +38,7 @@ int WallCount;
 double MassUnitConverter;
 double LengthUnitConverter;
 double TimeUnitConverter;
-float GavityConstant;
+float GravityConstant;
 
 // Window globals
 static int Window;
@@ -221,6 +221,9 @@ void setInitailConditions()
 	// ??????????
 	// Use random numbers to get all your different mass bodies
 	// BodyMass[i] = ????
+	BodyMass[i].x = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)*massOfCeres;
+	BodyMass[i].y = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)*massofCeres;
+	BodyMass[i].z = (((float)rand()/(float)RAND_MAX)*2.0 - 1.0)*massOfCeres;
 	
 	// ??? Set you mass unit
 	MassUnitConverter = massOfCeres/NUMBER_OF_BODIES; // kg
@@ -237,8 +240,8 @@ void setInitailConditions()
 	printf("\n TimeUnitConverter = %e hours", TimeUnitConverter);
 	
 	// If we did everthing right the universal gravity constant should be 1.
-	GavityConstant = 1.0;
-	printf("\n The gavity constant = %f in our units", GavityConstant);
+	GravityConstant = 1.0;
+	printf("\n The gravity constant = %f in our units", GravityConstant);
 	
 	// All spheres are the same diameter and mass so these should be 1. Noy true
 	// ??? don't need these.They will be close to one but not exactly one anymore.
@@ -496,7 +499,7 @@ void getForces()
 				
 				// This adds the gravity between asteroids but the gravity is lock in at what it 
 				// was at impact.
-				magnitude = GavityConstant*SphereMass*SphereMass/(SphereDiameter*SphereDiameter);
+				magnitude = GravityConstant*SphereMass*SphereMass/(SphereDiameter*SphereDiameter);
 				Force[i].x += magnitude*unit.x;
 				Force[i].y += magnitude*unit.y;
 				Force[i].z += magnitude*unit.z;
@@ -508,7 +511,7 @@ void getForces()
 			else
 			{
 				// This adds the gravity between asteroids when they are not touching.
-				magnitude = GavityConstant*SphereMass*SphereMass/(d.w*d.w);
+				magnitude = GravityConstant*SphereMass*SphereMass/(d.w*d.w);
 				Force[i].x += magnitude*unit.x;
 				Force[i].y += magnitude*unit.y;
 				Force[i].z += magnitude*unit.z;
