@@ -368,7 +368,7 @@ void drawPicture()
 	}
 	
 	// Drawing the wall.
-	glColor3d(1.0, 1.0, 0.75);
+	glColor3d(.427, 0.749, 0.408);
 	glBegin(GL_QUADS);
 		glVertex3f(25.0, -5.0, 5.0);
 		glVertex3f(25.0, -5.0, -5.0);
@@ -378,7 +378,7 @@ void drawPicture()
 	glEnd();
 	WallCount++;
 	
-	glColor3d(1.0, 0.0, 0.0);
+	glColor3d(0.941, 0.635, 0.196);
 	glPointSize(10.0f);
 	glBegin(GL_POINTS);
 		glVertex3f(25.0f, 0.0f, 0.0f);
@@ -517,23 +517,17 @@ void getForces()
 					exit(0);
 				}
 				
+				
 				// Finding which body is largest.
 				if(BodyRadius[j] < BodyRadius[i])
 				{
-					largerBody = BodyRadius[i];
+					r1 = BodyRadius[i];
+					r2 = BodyRadius[j];
 				}
 				else
 				{
-					largerBody = BodyRadius[j];
-				}
-				
-				if(r <= largerBody)
-				{
-					r = 
-				}
-				else
-				{
-					r1 = 
+					r1 = BodyRadius[j];
+					r2 = BodyRadius[i];
 				}
 
 				// Finding the intersection area.
