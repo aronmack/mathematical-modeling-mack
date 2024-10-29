@@ -34,7 +34,7 @@ int WallCount;
 double MassUnitConverter;
 double LengthUnitConverter;
 double TimeUnitConverter;
-float GravityConstant;
+float AttractionForce;
 
 // Window globals
 static int Window;
@@ -235,7 +235,7 @@ void setInitialConditions()
 	}
 	
 	AttractionForce = P / 0.08;
-	printf("\n The attraction force = %f in our units", AttractionMagnitude);
+	printf("\n The attraction force = %f in our units", AttractionForce);
 	
 	// Making the size of the intial globe we use to place the bodies.
 	globeSize = 10.0;
