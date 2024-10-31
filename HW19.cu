@@ -210,12 +210,12 @@ void setInitialConditions()
 	
 	for(int i = 0; i < NUMBER_OF_BODIES; i++)
 	{
-		BodyMass[i] = MassofPoly;
+		BodyMass[i] = massOfPoly;
 	}
 	
 	for(int i = 0; i < NUMBER_OF_BODIES; i++)
 	{
-		BodyRadius[i] = DiameterofPoly / 2.0;
+		BodyRadius[i] = diameterOfPoly / 2.0;
 	}
 	
 	
@@ -485,7 +485,7 @@ void getForces()
 				
 				// This adds the gravity between asteroids but the gravity is lock in at what it 
 				// was at impact.
-				magnitude = GravityConstant*BodyMass[i]*BodyMass[j]/((BodyRadius[i] + BodyRadius[j])*(BodyRadius[i] + BodyRadius[j]));
+				//magnitude = GravityConstant*BodyMass[i]*BodyMass[j]/((BodyRadius[i] + BodyRadius[j])*(BodyRadius[i] + BodyRadius[j]));
 				Force[i].x += magnitude*unit.x;
 				Force[i].y += magnitude*unit.y;
 				Force[i].z += magnitude*unit.z;
@@ -497,13 +497,13 @@ void getForces()
 			else
 			{
 				// This adds the gravity between asteroids when they are not touching.
-				Force[i].x += FMagnitude*unit.x;
-				Force[i].y += FMagnitude*unit.y;
-				Force[i].z += FMagnitude*unit.z;
+				Force[i].x += AttractionForce*unit.x;
+				Force[i].y += AttractionForce*unit.y;
+				Force[i].z += AttractionForce*unit.z;
 				
-				Force[j].x -= FMagnitude*unit.x;
-				Force[j].y -= FMagnitude*unit.y;
-				Force[j].z -= FMagnitude*unit.z;
+				Force[j].x -= AttractionForce*unit.x;
+				Force[j].y -= AttractionForce*unit.y;
+				Force[j].z -= AttractionForce*unit.z;
 			}
 		}
 	}
