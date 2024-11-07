@@ -25,7 +25,7 @@
 
 #define FLOOR_STRENGTH 200.0
 #define SHERE_RADIUS 0.2
-#define DROP_HIEGHT 5.0
+#define DROP_HEIGHT 5.0
 
 // Globals
 float Px[N], Py[N], Pz[N];
@@ -91,22 +91,59 @@ void set_initail_conditions()
 	CompressionStrength[2][3] = 10.0;
 	TensionStrength[2][3] = 10.0;
 	NaturalLength[2][3] = 2.0;
+
+	CompressionStrength[4][5] = 10.0;
+	TensionStrength[4][5] = 10.0;
+	NaturalLength[4][5] = 2.0;
+	
+	CompressionStrength[4][6] = 10.0;
+	TensionStrength[4][6] = 10.0;
+	NaturalLength[4][6] = 2.0;
+	
+	CompressionStrength[4][7] = 10.0;
+	TensionStrength[4][7] = 10.0;
+	NaturalLength[4][7] = 2.0;
+	
+	CompressionStrength[5][6] = 10.0;
+	TensionStrength[5][6] = 10.0;
+	NaturalLength[5][6] = 2.0;
+	
+	CompressionStrength[5][7] = 10.0;
+	TensionStrength[5][7] = 10.0;
+	NaturalLength[5][7] = 2.0;
+	
+	CompressionStrength[6][7] = 
+	TensionStrength[6][7] = 10.0;
+	NaturalLength[6][7] = 2.0;
+	
+	//Inter-Tetrahedron Connections
+	CompressionStrength[3][4] = 10.0;
+	TensionStrength[3][4] = 10.0;
+	NaturalLength[3][4] = 2.0;
+	
+	CompressionStrength[1][5] = 10.0;
+	TensionStrength[1][5] = 10.0;
+	NaturalLength[1][5] = 2.0;
+	
+	CompressionStrength[2][6] = 10.0;
+	TensionStrength[2][6] = 10.0;
+	NaturalLength[2][6] = 2.0;
 	
 	//Setting node positions
 	Px[0] = 0.0;
-	Py[0] = 0.0 + DROP_HIEGHT;
+	Py[0] = 0.0 + DROP_HEIGHT;
 	Pz[0] = 1.0;
 	
 	Px[1] = 1.0;
-	Py[1] = 0.0 + DROP_HIEGHT;
+	Py[1] = 0.0 + DROP_HEIGHT;
 	Pz[1] = 0.0;
 	
 	Px[2] = -1.0;
-	Py[2] = 0.0 + DROP_HIEGHT;
+	Py[2] = 0.0 + DROP_HEIGHT;
 	Pz[2] = 0.0;
 	
 	Px[3] = 0.0;
-	Py[3] = 1.0 + DROP_HIEGHT;
+	Py[3] = 1.0 + DROP_HEIGHT;
 	Pz[3] = 0.0;
 
 	Px[4] = 0.0;
