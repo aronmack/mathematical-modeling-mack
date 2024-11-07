@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 4
+#define N 8
 
 #define XWindowSize 2500
 #define YWindowSize 2500
@@ -108,6 +108,22 @@ void set_initail_conditions()
 	Px[3] = 0.0;
 	Py[3] = 1.0 + DROP_HIEGHT;
 	Pz[3] = 0.0;
+
+	Px[4] = 0.0;
+	Py[4] = 2.0 + DROP_HEIGHT;
+	Pz[4] = 1.0;
+	
+	Px[5] = 1.0;
+	Py[5] = 2.0 + DROP_HEIGHT;
+	Pz[5] = 0.0;
+	
+	Px[6] = -1.0;
+	Py[6] = 2.0 + DROP_HEIGHT;
+	Pz[6] = 0.0;
+	
+	Px[7] = 0.0;
+	Py[7] = 3.0 + DROP_HEIGHT;
+	Pz[7] = 0.0;
 }
 
 void draw_picture()
